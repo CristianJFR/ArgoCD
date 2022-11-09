@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: graph-api-deployment
+  namespace: sx-licence-manager
+  labels:
+    app: graph-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: graph-api
+  template:
+    metadata:
+      labels:
+        app: graph-api
+    spec:
+      containers:
+        - name: graph-api
+          image: licencemanageracr.azurecr.io/graphms:latest
+          ports:
+          - containerPort: 80
+          env:
+            # - name: MSSQL_PID
+            #   value: "Developer"
+            # - name: ACCEPT_EULA
+            #   value: "Y"
+            # - name: SA_PASSWORD
+            #   value: VG91Z2hwYXNzMSE=
+            # - name: ME_CONFIG_SQL_SERVER
+            #   valueFrom: 
+            #     configMapKeyRef:
+            #       name: mssql-config
+            #       key: mssql.conf
+            # - name: servicename_SERVICE_HOST
+            #   value: mssql-latest-deploy
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+      imagePullSecrets:
+        - name: licence-manager-acrsecret
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: graph-api-service
+  namespace: sx-licence-manager
+spec:
+  selector:
+    app: graph-api
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      
+
