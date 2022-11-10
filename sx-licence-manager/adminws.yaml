@@ -47,7 +47,7 @@ metadata:
 spec:
   selector:
     app: adminws
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - protocol: TCP
       port: 80
