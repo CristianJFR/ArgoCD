@@ -48,7 +48,7 @@ metadata:
 spec:
   selector:
     app: licencews
-  type: ClusterIP
+  type: LoadBalancer
   ports:
     - protocol: TCP
       port: 80
