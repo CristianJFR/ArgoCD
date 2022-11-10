@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: licencews-deployment
+  namespace: sx-licence-manager
+  labels:
+    app: licencews
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: licencews
+  template:
+    metadata:
+      labels:
+        app: licencews
+    spec:
+      containers:
+        - name: licencews
+          image: licencemanageracr.azurecr.io/licencews:latest
+          ports:
+          - containerPort: 80
+          env:
+            # - name: MSSQL_PID
+            #   value: "Developer"
+            # - name: ACCEPT_EULA
+            #   value: "Y"
+            # - name: SA_PASSWORD
+            #   value: VG91Z2hwYXNzMSE=
+            # - name: ME_CONFIG_SQL_SERVER
+            #   valueFrom: 
+            #     configMapKeyRef:
+            #       name: mssql-config
+            #       key: mssql.conf
+            # - name: servicename_SERVICE_HOST
+            #   value: mssql-latest-deploy
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Production
+      imagePullSecrets:
+        - name: licence-manager-acrsecret
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: licencews-service
+  namespace: sx-licence-manager
+spec:
+  selector:
+    app: licencews
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      
+
